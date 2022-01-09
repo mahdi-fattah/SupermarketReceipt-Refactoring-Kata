@@ -4,8 +4,9 @@ std::vector<ReceiptItem> Receipt::getItems() const {
     return items;
 }
 
-void Receipt::addDiscount(const Discount& discount) {
-    discounts.push_back(discount);
+void Receipt::addDiscount(const Product& product, std::string description, double discountAmount) {
+    Discount* discount = new Discount(description, discountAmount, product);
+    discounts.push_back(*discount);
 }
 
 void Receipt::addProduct(const Product& product, double quantity, double price, double totalPrice) {
@@ -17,12 +18,18 @@ std::vector<Discount> Receipt::getDiscounts() const {
 }
 
 double Receipt::getTotalPrice() const {
-    double total = 0.0;
-    for (const auto& item : items) {
-        total += item.getTotalPrice();
-    }
-    for (const auto& discount : discounts) {
-        total += discount.getDiscountAmount();
-    }
+    double total = std::accumulate(begin(items), end(items), 0.0,
+        [](double price, const auto& item) { return price + item.getTotalPrice(); });
+
+    total = std::accumulate(begin(discounts), end(discounts), total,
+        [](double val, const auto& discount) { return val + discount.getDiscountAmount(); });
+
     return total;
+}
+double Receipt::getItemQuantity(std::string itemName) {
+    for (int i = 0; i < items.size(); i++) {
+        if (items[i].getProductName() == itemName)
+            return items[i].getQuantity();
+    }
+    return -1;
 }

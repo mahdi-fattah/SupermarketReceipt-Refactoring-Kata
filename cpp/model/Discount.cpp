@@ -15,3 +15,6 @@ double Discount::getDiscountAmount() const {
 Product Discount::getProduct() const {
     return product;
 }
+std::string Discount::getProductName() const {
+    return product.getName();
+}

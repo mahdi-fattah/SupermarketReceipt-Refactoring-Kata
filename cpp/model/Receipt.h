@@ -3,6 +3,7 @@
 
 
 #include <vector>
+#include <numeric>
 #include "Discount.h"
 #include "ReceiptItem.h"
 
@@ -14,9 +15,11 @@ public:
 
     double getTotalPrice() const;
 
-    void addDiscount(const Discount& discount);
+    void addDiscount(const Product& product, std::string description, double discountAmount);
 
     void addProduct(const Product& product, double quantity, double price, double totalPrice);
+
+    double getItemQuantity(std::string itemName);
 
 private:
     std::vector<ReceiptItem> items;
